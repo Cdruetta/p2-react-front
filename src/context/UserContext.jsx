@@ -14,10 +14,14 @@ export const UserProvider = ({ children }) => {
         setLoading(true);
         try {
             const { data: responseData } = await axios.get(BASE_URL);
-            console.log("Respuesta productos:", responseData);
+            console.log("Respuesta usuarios:", responseData);
             setUsers(Array.isArray(responseData.data) ? responseData.data : []);
         } catch (e) {
-            setError(e.message);
+            if (e.response && e.response.status === 403) {
+                alert("No tienes permisos para ver los usuarios");
+            } else {
+                setError(e.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -30,7 +34,11 @@ export const UserProvider = ({ children }) => {
             const created = Array.isArray(responseData.data) ? responseData.data[0] : responseData.data || responseData;
             setUsers(prev => Array.isArray(prev) ? [...prev, created] : [created]);
         } catch (e) {
-            setError(e.message);
+            if (e.response && e.response.status === 403) {
+                alert("No tienes permisos para crear usuarios");
+            } else {
+                setError(e.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -44,7 +52,11 @@ export const UserProvider = ({ children }) => {
                 prev.map(u => (u.id === id ? { ...updated, id: id } : u))
             );
         } catch (e) {
-            setError(e.message);
+            if (e.response && e.response.status === 403) {
+                alert("No tienes permisos para editar este usuario");
+            } else {
+                setError(e.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -55,11 +67,14 @@ export const UserProvider = ({ children }) => {
             await axios.delete(`${BASE_URL}/${id}`);
             setUsers(prev => prev.filter(u => u.id !== id));
         } catch (e) {
-            setError(e.message);
+            if (e.response && e.response.status === 403) {
+                alert("No tienes permisos para eliminar este usuario");
+            } else {
+                setError(e.message);
+            }
         }
     };
     
-
     useEffect(() => {
         getUsers();
     }, []);
