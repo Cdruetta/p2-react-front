@@ -7,14 +7,14 @@ import ProductRoutes from './layouts/products/index';
 import { ProductProvider } from './context/ProductContext';
 
 import UserRoutes from './layouts/users/index';
-import { UserProvider } from './context/UserContext';
+import { UserProvider } from './context/UserContext'
 
 import { AuthProvider } from './context/AuthContext';
 import LoginForm from './layouts/auth/LoginForm';
 import RegisterForm from './layouts/auth/RegisterForm';
-
+import ForgotPassword from './layouts/auth/ForgotPassword';
+import ResetPassword from './layouts/auth/ResetPassword';
 import PrivateRoute from './utils/PrivateRoute';
-import PublicRoute from './utils/PublicRoute';
 
 import './App.css';
 import 'primereact/resources/themes/lara-dark-indigo/theme.css';
@@ -24,68 +24,36 @@ import 'primeicons/primeicons.css';
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <Fragment>
-          <Routes>
-
-            {/* HOME - PRIVADA */}
-            <Route
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Home />
-                </PrivateRoute>
-              }
-            />
-
-            {/* LOGIN - PÚBLICA */}
-            <Route
-              path="/inicio-sesion"
-              element={
-                <PublicRoute>
-                  <LoginForm />
-                </PublicRoute>
-              }
-            />
-
-            {/* REGISTRO - PÚBLICA */}
-            <Route
-              path="/registro"
-              element={
-                <PublicRoute>
-                  <RegisterForm />
-                </PublicRoute>
-              }
-            />
-
-            {/* PRODUCTOS - PRIVADA */}
-            <Route
-              path="/productos/*"
-              element={
-                <PrivateRoute>
-                  <ProductProvider>
-                    <ProductRoutes />
-                  </ProductProvider>
-                </PrivateRoute>
-              }
-            />
-
-            {/* USUARIOS - PRIVADA */}
-            <Route
-              path="/usuarios/*"
-              element={
-                <PrivateRoute>
+        <AuthProvider>
+          <Fragment>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path='/inicio-sesion' element={<LoginForm/>}/>
+              <Route path='/registro' element={<RegisterForm/>}/>
+              <Route path='/clave-olvidada' element={<ForgotPassword/>}/>
+              <Route path='/recuperar-contraseña' element={<ResetPassword/>}/>
+              <Route
+                path="/productos/*"
+                element={
+                  <PrivateRoute>
+                    <ProductProvider>
+                      <ProductRoutes />
+                    </ProductProvider>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/usuarios/*"
+                element={
                   <UserProvider>
                     <UserRoutes />
                   </UserProvider>
-                </PrivateRoute>
-              }
-            />
-
-          </Routes>
-        </Fragment>
-      </AuthProvider>
-    </Router>
+                }
+              />
+            </Routes>
+          </Fragment>
+        </AuthProvider>
+      </Router>
   );
 }
 
